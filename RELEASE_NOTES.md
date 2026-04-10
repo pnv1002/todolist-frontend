@@ -1,3 +1,73 @@
+# Release Notes — v0.0.2
+
+**Ngày phát hành:** 10/04/2026
+**Tag:** `v0.0.2`
+**Nhánh:** `main`
+**Phiên bản trước:** `v0.0.1`
+
+---
+
+## Tổng quan
+
+Phiên bản `v0.0.2` tập trung vào trải nghiệm tương tác của bảng Kanban và mở rộng kết nối với toàn bộ API backend. Người dùng giờ có thể kéo thả thẻ bằng chuột giữa các cột, đính kèm file vào task, và nhập thêm trường số tiền.
+
+---
+
+## Tính năng mới
+
+### Kéo thả Kanban (Drag & Drop)
+- Kéo thẻ bằng chuột sang bất kỳ cột nào (Cần làm / Đang thực hiện / Hoàn thành)
+- Cột đang hover sáng lên để xác nhận vị trí thả
+- Thẻ đang kéo hiển thị dưới dạng ghost card hơi nghiêng theo chuột
+- Click bình thường vẫn mở modal chỉnh sửa (không kích hoạt drag)
+- Sau khi thả, gọi API `PATCH /todos/:id/move` để lưu trạng thái mới
+
+### Tệp đính kèm (Attachments)
+- Tải lên file đính kèm cho từng task qua nút **"+ Tải lên"** trong modal chỉnh sửa
+- Xem danh sách tất cả file đính kèm với tên file và dung lượng
+- Xóa từng file đính kèm trực tiếp trong modal
+- Kết nối đầy đủ với API `GET / POST / DELETE /todos/:id/attachments`
+
+### Trường Số tiền (Amount)
+- Thêm field **Số tiền** vào form tạo/chỉnh sửa task
+- Hỗ trợ giá trị thập phân, không bắt buộc nhập
+
+---
+
+## Cải tiến kỹ thuật
+
+- Thêm `attachmentStore` (Zustand) quản lý trạng thái file đính kèm theo từng todo
+- Cập nhật `todoStore`: thêm action `moveTodo`
+- Cập nhật kiểu dữ liệu `Todo`: bổ sung `position`, `amount`
+- Cập nhật `TodoFormData`: bổ sung `amount`
+- Thêm interface `Attachment`
+
+---
+
+## Thư viện mới
+
+| Thư viện | Phiên bản | Mục đích |
+|----------|-----------|----------|
+| @dnd-kit/core | 6.3.1 | Drag & drop cho Kanban board |
+
+---
+
+## Commits trong phiên bản này
+
+| Commit | Mô tả |
+|--------|-------|
+| `54a3d96` | docs: thêm release notes cho v0.0.1 |
+| `3e6ed7e` | feat: drag-and-drop Kanban, attachment support, amount field |
+
+---
+
+## Ghi chú
+
+- Tính năng attachment chỉ hiển thị khi **chỉnh sửa** task đã tồn tại (không có khi tạo mới)
+- File tải lên được lưu trong thư mục `uploads/` phía backend
+
+---
+
 # Release Notes — v0.0.1
 
 **Ngày phát hành:** 10/04/2026
