@@ -15,6 +15,8 @@ export interface Todo {
   status: TodoStatus;
   priority: TodoPriority;
   deadline: string | null;
+  position: number;
+  amount: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -25,4 +27,16 @@ export interface TodoFormData {
   status: TodoStatus;
   priority: TodoPriority;
   deadline?: string | null;
+  amount?: number | null;
+}
+
+export interface Attachment {
+  id: string;
+  todo_id: string;
+  user_id: string;
+  original_name: string;
+  stored_name: string;
+  mime_type: string;
+  size_bytes: number;
+  created_at: string;
 }

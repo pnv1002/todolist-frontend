@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Todo, TodoFormData } from '../types';
+import { Todo, TodoFormData, TodoStatus } from '../types';
 import api from '../services/api';
 
 interface TodoState {
@@ -8,6 +8,7 @@ interface TodoState {
   fetchTodos: () => Promise<void>;
   createTodo: (data: TodoFormData) => Promise<void>;
   updateTodo: (id: string, data: Partial<TodoFormData>) => Promise<void>;
+  moveTodo: (id: string, status: TodoStatus, position: number) => Promise<void>;
   deleteTodo: (id: string) => Promise<void>;
 }
 
@@ -23,11 +24,16 @@ export const useTodoStore = create<TodoState>((set) => ({
 
   createTodo: async (formData) => {
     const { data } = await api.post<Todo>('/todos', formData);
-    set((s) => ({ todos: [data, ...s.todos] }));
+    set((s) => ({ todos: [...s.todos, data] }));
   },
 
   updateTodo: async (id, formData) => {
     const { data } = await api.put<Todo>(`/todos/${id}`, formData);
+    set((s) => ({ todos: s.todos.map((t) => (t.id === id ? data : t)) }));
+  },
+
+  moveTodo: async (id, status, position) => {
+    const { data } = await api.patch<Todo>(`/todos/${id}/move`, { status, position });
     set((s) => ({ todos: s.todos.map((t) => (t.id === id ? data : t)) }));
   },
 
