@@ -1,0 +1,38 @@
+import { create } from 'zustand';
+import { Todo, TodoFormData } from '../types';
+import api from '../services/api';
+
+interface TodoState {
+  todos: Todo[];
+  loading: boolean;
+  fetchTodos: () => Promise<void>;
+  createTodo: (data: TodoFormData) => Promise<void>;
+  updateTodo: (id: string, data: Partial<TodoFormData>) => Promise<void>;
+  deleteTodo: (id: string) => Promise<void>;
+}
+
+export const useTodoStore = create<TodoState>((set) => ({
+  todos: [],
+  loading: false,
+
+  fetchTodos: async () => {
+    set({ loading: true });
+    const { data } = await api.get<Todo[]>('/todos');
+    set({ todos: data, loading: false });
+  },
+
+  createTodo: async (formData) => {
+    const { data } = await api.post<Todo>('/todos', formData);
+    set((s) => ({ todos: [data, ...s.todos] }));
+  },
+
+  updateTodo: async (id, formData) => {
+    const { data } = await api.put<Todo>(`/todos/${id}`, formData);
+    set((s) => ({ todos: s.todos.map((t) => (t.id === id ? data : t)) }));
+  },
+
+  deleteTodo: async (id) => {
+    await api.delete(`/todos/${id}`);
+    set((s) => ({ todos: s.todos.filter((t) => t.id !== id) }));
+  },
+}));
