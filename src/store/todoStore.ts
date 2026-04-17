@@ -18,8 +18,9 @@ export const useTodoStore = create<TodoState>((set) => ({
 
   fetchTodos: async () => {
     set({ loading: true });
-    const { data } = await api.get<Todo[]>('/todos');
-    set({ todos: data, loading: false });
+    const { data } = await api.get<Todo[] | { data: Todo[] }>('/todos');
+    const todos = Array.isArray(data) ? data : data.data;
+    set({ todos, loading: false });
   },
 
   createTodo: async (formData) => {
